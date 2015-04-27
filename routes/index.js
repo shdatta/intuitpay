@@ -108,7 +108,8 @@ exports.sale = function(req, res, next){
 			var card = results.rows[0];
 			var merDetails = extractPaymentDetails(req);
 			var charge = payments.getCharge(merDetails, card, salt);
-			payments.sale(req, merDetails.merchantId, charge)
+			payments.sale(req, merDetails.merchantId, charge);
+			payments.text(charge, req.body.phone_number);
 		});
 	});
 };

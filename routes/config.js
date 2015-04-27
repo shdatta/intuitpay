@@ -13,8 +13,9 @@ var config = {
         'post': 'POST'
     },
     'twilioApi' : {
-    	'accountSID' : 'AC6faf15b703ab2223cd5e7fa2bdb61bda',
-    	'authToken' : '56779e793837961bae561ef8471742fd',
+    	'accountSid' : 'ACa77fee3eecb97b6f62515e4cd87bc884',
+    	'authToken' : '4fd14295967407d143691f1d76014549',
+    	'from' : '415-599-2671'
     }
 };
 
