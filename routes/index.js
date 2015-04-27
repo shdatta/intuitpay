@@ -70,7 +70,7 @@ var updatecard = function(req, res, salt, next){
   	});
 };	
 
-exports.createupdatecard = function(req, res){
+exports.createupdatecard = function(req, res, next){
 	getSalt(req, res, function(err, salt){
 		if (err) {return next(err);}
 		if (req.body.id === "-1"){
