@@ -12,6 +12,14 @@ init.initApp(app, express);
 var http = require('http');
 
 app.get('/', routes.index);
+
+{
+	"phone_number" 	: 	"8182884344",
+	"username"		: 	"Some Name",
+	"email"			:	"email",
+	"password"		:	"password",
+	"pin"			:	"pin"
+}
 app.post('/createuser', routes.createuser);
 
 //{
