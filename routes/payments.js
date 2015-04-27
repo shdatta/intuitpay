@@ -1,6 +1,7 @@
 var cryptography = require('./cryptography');
 var http = require('https');
 var config = require('./config');
+var twilio = require('twilio');
 var payments = function(){
 
 	this.sale = function(request, merchantId, charge){

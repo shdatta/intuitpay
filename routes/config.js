@@ -11,6 +11,10 @@ var config = {
     'httpMethods' : {
         'get' : 'GET',
         'post': 'POST'
+    },
+    'twilioApi' : {
+    	'accountSID' : 'AC6faf15b703ab2223cd5e7fa2bdb61bda',
+    	'authToken' : '56779e793837961bae561ef8471742fd',
     }
 };
 
