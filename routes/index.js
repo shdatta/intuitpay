@@ -110,6 +110,8 @@ exports.sale = function(req, res, next){
 			var charge = payments.getCharge(merDetails, card, salt);
 			payments.sale(req, merDetails.merchantId, charge);
 			payments.text(charge, req.body.phone_number);
+			
+			
 		});
 	});
 };

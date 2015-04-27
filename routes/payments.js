@@ -33,7 +33,7 @@ var payments = function(){
                 var body = JSON.parse(responseString);
                 body.RequestId = request.RequestId;
                 body.cardname = charge.name;
-    			request.res.body = body;
+                request.res.body = body;
     			request.next();;
   			});
 		});
@@ -65,11 +65,10 @@ var payments = function(){
 	};
 	
 	this.text = function(charge, number) {
-		client.messages.create({ 
-		
+		twilio.messages.create({ 
 			to: number, 
 			from: config.twilioApi.from, 
-			body: "Payment received from " + charge.name + " for the amount of " + charge.amount,   
+			body: 'Payment received from ' + charge.name + ' for the amount of ' + charge.amount,   
 		}, function(err, message) { 
 			console.log(message.sid); 
 		});
