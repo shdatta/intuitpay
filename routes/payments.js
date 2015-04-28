@@ -10,7 +10,7 @@ var payments = function(){
         twilio.messages.create({ 
             to: number, 
             from: config.twilioApi.from, 
-			body: '\nPayment from:' + charge.card.name + '\nAmount:' + body.amount,   
+			body: '\nPayment from:' + charge.card.name + '\nAmount:' + charge.amount,   
         }, function(err, message) { 
             console.log(err); 
         });
