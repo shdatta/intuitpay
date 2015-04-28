@@ -31,6 +31,14 @@ var config = {
         costCenter : "1111",
         subject : "Intuit Pay Recepit",
         template : "SWAGGER_TEST"
+    },
+    'ihubAPI' : {
+    	'clientUserId' : 'IntuitPay',
+        'authorization' : 'Intuit_IAM_Authentication intuit_appid="intuit.some.appid",  intuit_app_secret="somesecret",  intuit_token_type="",  intuit_token="",  intuit_userid="",  intuit_realmid="",  intuit_version="",   intuit_app_token=""',
+        'host' : 'cdm-qa1.payments.intuit.com',
+        'port' : 443,
+        'path' : '/v2/merchantmasteraccount'
+
     }
 };
 

@@ -12,7 +12,7 @@ var payments = function(){
             from: config.twilioApi.from, 
 			body: '\nPayment from:' + charge.card.name + '\nAmount:' + body.amount,   
         }, function(err, message) { 
-            console.log(message.sid); 
+            console.log(err); 
         });
     };
 
@@ -48,7 +48,6 @@ var payments = function(){
                 request.res.body = body;
                 request.next();
                 text(charge, body,  merchDetails.phone);
-                merchDetails.email = 'srikanta_nanjappa@intuit.com';
                 email.email(request, merchDetails, charge);
   			});
 		});

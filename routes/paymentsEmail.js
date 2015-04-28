@@ -49,7 +49,7 @@ var email = function() {
 
         req.write(userString);
         req.end();
-    }
+    };
 };
 
 module.exports = new email();

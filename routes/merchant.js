@@ -1,19 +1,9 @@
 var Q = require('q');
-
+var http = require('https');
+var querystring = require('querystring');
+var config = require('./config');
+var parseString = require('xml2js').parseString;
 var merchant = function(){
-
-	this.realmId = function(intuitId){
-		return '1019017762';
-
-	};
-    
-    this.phone = function(intuitId){
-        return '8182884341';
-    };
-    
-    this.name = function(intuitId){
-        return 'Intuit Software Services';
-    }
 
 	this.getSalt = function(req, phone){
 		var deferred = Q.defer();
@@ -24,6 +14,64 @@ var merchant = function(){
 			else {deferred.resolve(results);}
 		});
 		return deferred.promise;
-	}
+	};
+	
+	this.getMerchant = function(request, emailAddress) {
+		var deferred = Q.defer();	
+		var data = {'MerchantEmailMatch': emailAddress};
+		
+		var headers = {
+			'intuit_tid': request.RequestId,
+		    'Content-Type': config.jsonContentType,
+		    'Authorization': config.ihubAPI.authorization,
+		    'CLIENT_USER_ID': config.ihubAPI.clientUserId
+		};
+
+		var options = {
+			host: config.ihubAPI.host,
+  			port: config.ihubAPI.port,
+  			path: config.ihubAPI.path + '?' + querystring.stringify(data),
+  			method: config.httpMethods.get,
+  			headers: headers
+		};
+		
+		var merchantMasterAccount = '';
+		
+		var req = http.request(options, function(res) {
+  			res.setEncoding(config.utf8);
+  			var responseString = '';
+			res.on('data', function(data) {
+				merchantMasterAccount += data;
+  			});
+
+  			res.on('end', function() {
+                console.log('Merchant Master: ' + merchantMasterAccount);
+                
+                parseString(merchantMasterAccount, function (err, result) {
+        		    
+                	var merchantInfo = result.RestResponse.MerchantMasterAccounts[0].MerchantMasterAccount[0].Merchant[0];//.merchant;
+                	var masterInfo = result.RestResponse.MerchantMasterAccounts[0].MerchantMasterAccount[0].MasterAccount[0];
+                	
+                	var merchant = {
+        		    	'phoneNumber': merchantInfo.Phone[0].FreeFormNumber[0],
+        		    	'reamlId' : masterInfo.RealmId[0],
+        		    	'name' : merchantInfo.DBA[0],
+        		    	'email' : merchantInfo.Email[0].Address[0]
+        		    };
+        		    
+                	console.log(merchant);
+        		    deferred.resolve(merchant);
+        		});
+            });
+		});
+
+		req.on('error', function(e) {
+			request.logger.debug(e);
+			request.next(e);
+		});
+
+		req.end();
+		return deferred.promise;
+	};
 };
 module.exports = new merchant();
