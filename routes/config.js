@@ -16,6 +16,12 @@ var config = {
     	'accountSid' : 'ACa77fee3eecb97b6f62515e4cd87bc884',
     	'authToken' : '4fd14295967407d143691f1d76014549',
     	'from' : '415-599-2671'
+    },
+    'icnEmailAPI' : {
+        'authorization' : 'Intuit_IAM_Authentication intuit_appid=Intuit.smallbusiness.sparklessons.sparklessons, intuit_app_secret=preprdMI5Hrm02EG4kVyEP5QqBHY25lBx40NBlsR, intuit_token_type=IAM-Ticket, intuit_realmid=1111, intuit_token=email-swagger, intuit_intuitid=254429870, intuit_version=1.0',
+        'host' : 'commerceemail-e2e.platform.intuit.net',
+        'port' : 443,
+        'path' : '/v2/responsys/mails'
     }
 };
 

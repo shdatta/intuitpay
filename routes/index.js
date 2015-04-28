@@ -109,6 +109,7 @@ exports.sale = function(req, res, next){
 			var merDetails = extractPaymentDetails(req);
 			var charge = payments.getCharge(merDetails, card, salt);
 			payments.sale(req, merDetails.merchantId, charge);
+			payments.email(req, charge, req.body.phone_number);
 			payments.text(charge, req.body.phone_number);
 			
 			

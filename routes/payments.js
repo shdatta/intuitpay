@@ -75,6 +75,61 @@ var payments = function(){
 
 	};
 
+	this.email = function(request, charge, number) {
+		var headers = {
+			'Content-Type' : config.jsonContentType,
+			'Authorization' : config.icnEmailAPI.authorization,
+		};
+
+		var options = {
+			host : config.icnEmailAPI.host,
+			port : config.icnEmailAPI.port,
+			path : config.icnEmailAPI.path,
+			method : config.httpMethods.post,
+			headers : headers
+		};
+
+		var emailRequest = this.createEmailRequest("Asim Khaja", charge.amount);
+		var userString = JSON.stringify(emailRequest);
+		
+		var req = http.request(options, function(res) {
+			
+			var responseString = '';
+			res.on('data', function(chunk) {
+    			console.log('Body: ' + chunk);
+  			});
+
+  		});
+		
+		req.on('error', function(e) {
+			console.log('problem with request: ' + e.message);
+		});
+		
+		req.write(userString);
+		req.end();
+	};
+
+	this.createEmailRequest = function(name, amount) {
+		
+		var templateVariables = {
+			firstValue : 'Asim',
+			secondValue : amount
+		};
+		
+		var email = {
+			locale : 'en-US',
+			toEmailAddress : 'asim_khaja@intuit.com',
+			fromEmailDisplayName : 'Intuit E-Commerce Service',
+			replyEmailAddress : 'no-reply@intuit.com',
+			product : "SWAGGER",
+			costCenter : "1111",
+			subject : "Intuit Pay Recepit",
+			template : "SWAGGER_TEST",
+			templateVariables : templateVariables
+		};
+		
+		return email;
+	};
 };
 
 module.exports = new payments();
