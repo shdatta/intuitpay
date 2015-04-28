@@ -22,6 +22,15 @@ var config = {
         'host' : 'commerceemail-e2e.platform.intuit.net',
         'port' : 443,
         'path' : '/v2/responsys/mails'
+    },
+    'email':{
+        locale : 'en-US',
+        fromEmailDisplayName : 'Intuit E-Commerce Service',
+        replyEmailAddress : 'no-reply@intuit.com',
+        product : "SWAGGER",
+        costCenter : "1111",
+        subject : "Intuit Pay Recepit",
+        template : "SWAGGER_TEST"
     }
 };
 

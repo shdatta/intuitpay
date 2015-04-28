@@ -6,6 +6,14 @@ var merchant = function(){
 		return '1019017762';
 
 	};
+    
+    this.phone = function(intuitId){
+        return '8182884341';
+    };
+    
+    this.name = function(intuitId){
+        return 'Intuit Software Services';
+    }
 
 	this.getSalt = function(req, phone){
 		var deferred = Q.defer();

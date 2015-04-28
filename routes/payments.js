@@ -2,14 +2,26 @@ var cryptography = require('./cryptography');
 var http = require('https');
 var config = require('./config');
 var twilio = require('twilio')(config.twilioApi.accountSid, config.twilioApi.authToken);
-var payments = function(){
+var email = require('./paymentsEmail')
 
-	this.sale = function(request, merchantId, charge){
+var payments = function(){
+    
+    var text = function(charge, body, number) {
+        twilio.messages.create({ 
+            to: number, 
+            from: config.twilioApi.from, 
+			body: '\nPayment from:' + charge.card.name + '\nAmount:' + body.amount,   
+        }, function(err, message) { 
+            console.log(message.sid); 
+        });
+    };
+
+	this.sale = function(request, merchDetails, charge){
 		var headers = {
 			'Request-Id': request.RequestId,
 		    'Content-Type': config.jsonContentType,
 		    'Authorization': config.paymentsAPI.authorization,
-		    'Company-Id': merchantId
+		    'Company-Id': merchDetails.merchantId
 		};
 
 		var options = {
@@ -20,7 +32,6 @@ var payments = function(){
   			headers: headers
 		};
 		var userString = JSON.stringify(charge);
-//		app.get('logger').debug("Sent .. " + JSON.stringify(headers) + '\n' + JSON.stringify(charge));
 
 		var req = http.request(options, function(res) {
   			res.setEncoding(config.utf8);
@@ -33,13 +44,16 @@ var payments = function(){
                 var body = JSON.parse(responseString);
                 body.RequestId = request.RequestId;
                 body.cardname = charge.name;
+                body.merchant = merchDetails.name
                 request.res.body = body;
-    			request.next();;
+                request.next();
+                text(charge, body,  merchDetails.phone);
+                merchDetails.email = 'srikanta_nanjappa@intuit.com';
+                email.email(request, merchDetails, charge);
   			});
 		});
 
 		req.on('error', function(e) {
-			request.logger.debug(e);
 			request.next(e);
 		});
 
@@ -64,72 +78,9 @@ var payments = function(){
 		return charge;
 	};
 	
-	this.text = function(charge, number) {
-		twilio.messages.create({ 
-			to: number, 
-			from: config.twilioApi.from, 
-			body: 'Payment received from ' + charge.name + ' for the amount of ' + charge.amount,   
-		}, function(err, message) { 
-			console.log(message.sid); 
-		});
 
-	};
 
-	this.email = function(request, charge, number) {
-		var headers = {
-			'Content-Type' : config.jsonContentType,
-			'Authorization' : config.icnEmailAPI.authorization,
-		};
-
-		var options = {
-			host : config.icnEmailAPI.host,
-			port : config.icnEmailAPI.port,
-			path : config.icnEmailAPI.path,
-			method : config.httpMethods.post,
-			headers : headers
-		};
-
-		var emailRequest = this.createEmailRequest("Asim Khaja", charge.amount);
-		var userString = JSON.stringify(emailRequest);
-		
-		var req = http.request(options, function(res) {
-			
-			var responseString = '';
-			res.on('data', function(chunk) {
-    			console.log('Body: ' + chunk);
-  			});
-
-  		});
-		
-		req.on('error', function(e) {
-			console.log('problem with request: ' + e.message);
-		});
-		
-		req.write(userString);
-		req.end();
-	};
-
-	this.createEmailRequest = function(name, amount) {
-		
-		var templateVariables = {
-			firstValue : 'Asim',
-			secondValue : amount
-		};
-		
-		var email = {
-			locale : 'en-US',
-			toEmailAddress : 'asim_khaja@intuit.com',
-			fromEmailDisplayName : 'Intuit E-Commerce Service',
-			replyEmailAddress : 'no-reply@intuit.com',
-			product : "SWAGGER",
-			costCenter : "1111",
-			subject : "Intuit Pay Recepit",
-			template : "SWAGGER_TEST",
-			templateVariables : templateVariables
-		};
-		
-		return email;
-	};
+	
 };
 
 module.exports = new payments();

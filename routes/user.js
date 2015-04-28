@@ -14,6 +14,17 @@
 			});
 			return deferred.promise;
  		}
+        
+        this.getUserDetails = function(req){
+            var deferred = Q.defer();
+            var detailsSql = 'select email, password, pin from PAYDATA.phone_information where phone_number = ?';
+            var pars = [req.body.phone_number];
+			req.app.get('cassandra').execute(detailsSql, pars, {prepare:true}, function(err, results){
+				if (err){deferred.reject(err);}
+				else {deferred.resolve(results);}
+			});
+			return deferred.promise;
+        }
 };
 
 module.exports = new user();

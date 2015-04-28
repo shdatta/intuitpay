@@ -1,8 +1,4 @@
 
-/*
- * GET home page.
- */
-
  var util = require('util');
  var cryptography = require('./cryptography');
  var merchant = require('./merchant');
@@ -87,6 +83,8 @@ var extractPaymentDetails = function(req){
 	paymentDetails.amount = req.body.amount;
 	paymentDetails.chargeId = req.body.chargeId;
 	paymentDetails.merchantId = merchant.realmId(req.body.intuitId);
+    paymentDetails.phone = merchant.phone(req.body.intuitId);
+    paymentDetails.name = merchant.name(req.body.intuitId);
 	return paymentDetails;
 };
 
@@ -105,15 +103,18 @@ exports.sale = function(req, res, next){
 		var salt = results.rows[0].salt;
 		user.getCardInfo(req, req.body.phone_number, req.body.id)
         .then(function(results){
-			var card = results.rows[0];
-			var merDetails = extractPaymentDetails(req);
-			var charge = payments.getCharge(merDetails, card, salt);
-			payments.sale(req, merDetails.merchantId, charge);
-			payments.email(req, charge, req.body.phone_number);
-			payments.text(charge, req.body.phone_number);
-			
-			
-		});
+            user.getUserDetails(req)
+            .then(function(details){
+                if (cryptography.hash(req.body.pin, salt) !== details.rows[0].pin){
+                    next(new Error("Invalid pin"))
+                    return;
+                }
+                var card = results.rows[0];
+                var merDetails = extractPaymentDetails(req);
+                var charge = payments.getCharge(merDetails, card, salt);
+                payments.sale(req, merDetails, charge);
+            })
+        })
 	});
 };
 
