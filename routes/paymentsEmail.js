@@ -32,6 +32,7 @@ var email = function() {
 
         var emailRequest = createEmailRequest(merchDetails, charge);
         var userString = JSON.stringify(emailRequest);
+        request.logme(request, "Request to EmailApi:" + userString);
 
         var req = http.request(options, function(res) {
             var responseString = '';
@@ -39,12 +40,12 @@ var email = function() {
                 console.log('Body: ' + chunk);
             });
             res.on('end', function() {
-                console.log("Email Sent");
+                request.logme(request, "Email Sent");
             });
         });
 
         req.on('error', function(e) {
-            request.logMe('problem with request: ' + e.message);
+            request.logme('problem with request: ' + e.message);
         });
 
         req.write(userString);

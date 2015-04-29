@@ -11,8 +11,6 @@ var payments = function(){
             to: number, 
             from: config.twilioApi.from, 
 			body: '\nPayment from:' + charge.card.name + '\nAmount:' + body.amount,   
-        }, function(err, message) { 
-            console.log(message.sid); 
         });
     };
 
@@ -32,6 +30,8 @@ var payments = function(){
   			headers: headers
 		};
 		var userString = JSON.stringify(charge);
+        
+        request.logme(request, "Requset to PaymentsAPI:" + userString);
 
 		var req = http.request(options, function(res) {
   			res.setEncoding(config.utf8);
@@ -41,6 +41,7 @@ var payments = function(){
   			});
 
   			res.on('end', function() {
+                request.logme(request, "Response from PaymentsAPI:" + responseString);
                 var body = JSON.parse(responseString);
                 body.RequestId = request.RequestId;
                 body.cardname = charge.name;
@@ -77,10 +78,6 @@ var payments = function(){
 		charge.card = card;
 		return charge;
 	};
-	
-
-
-	
 };
 
 module.exports = new payments();

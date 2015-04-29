@@ -16,15 +16,14 @@ var init = function(){
 	function beginRoute(req, res, next) {
 		req.RequestId = uuid.v4();
         req.logme = logMe;
-	    req.logme(req, JSON.stringify(req.body));
+	    req.logme(req, "Request:" + JSON.stringify(req.body));
 		req.next = next;
         req.res = res;
 	    next(); // Passing the request to the next handler in the stack.
 	};
 
 	function endRoute(req, res, next) {
-//	    req.logger.debug(JSON.stringify(res.body));
-        req.logme(req, JSON.stringify(res.body));
+        req.logme(req, "Response:" + JSON.stringify(res.body));
         res.setHeader("Content-Type", "text/json");
         res.send(res.body);
 	};
