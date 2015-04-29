@@ -82,9 +82,6 @@ var extractPaymentDetails = function(req){
 	var paymentDetails = new Object();
 	paymentDetails.amount = req.body.amount;
 	paymentDetails.chargeId = req.body.chargeId;
-	paymentDetails.merchantId = merchant.realmId(req.body.intuitId);
-    paymentDetails.phone = merchant.phone(req.body.intuitId);
-    paymentDetails.name = merchant.name(req.body.intuitId);
 	return paymentDetails;
 };
 
@@ -106,15 +103,23 @@ exports.sale = function(req, res, next){
             user.getUserDetails(req)
             .then(function(details){
                 if (cryptography.hash(req.body.pin, salt) !== details.rows[0].pin){
-                    next(new Error("Invalid pin"))
+                    next(new Error("Invalid pin"));
                     return;
                 }
                 var card = results.rows[0];
                 var merDetails = extractPaymentDetails(req);
                 var charge = payments.getCharge(merDetails, card, salt);
-                payments.sale(req, merDetails, charge);
-            })
-        })
+                merchant.getMerchant(req, req.body.intuitId)
+            	.then(function(results) {
+            		merDetails.merchantId = results.reamlId;
+            		merDetails.phone = results.phoneNumber;
+            		merDetails.name = results.name;
+            		merDetails.email = results.email;
+            	    payments.sale(req, merDetails, charge);
+            	});
+                
+            });
+        });
 	});
 };
 
