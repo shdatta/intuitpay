@@ -36,6 +36,8 @@ var merchant = function(){
 		};
 		
 		var merchantMasterAccount = '';
+        
+        request.logme(request, "Request iHub:" + emailAddress);
 		
 		var req = http.request(options, function(res) {
   			res.setEncoding(config.utf8);
@@ -51,6 +53,7 @@ var merchant = function(){
         		    
                 	var merchantInfo = result.RestResponse.MerchantMasterAccounts[0].MerchantMasterAccount[0].Merchant[0];//.merchant;
                 	var masterInfo = result.RestResponse.MerchantMasterAccounts[0].MerchantMasterAccount[0].MasterAccount[0];
+                    request.logme(request, "Response iHub:" + merchantInfo.DBA[0] + "--" + merchantInfo.Phone[0].FreeFormNumber[0]);
                 	
                 	var merchant = {
         		    	'phoneNumber': merchantInfo.Phone[0].FreeFormNumber[0],
