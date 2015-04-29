@@ -43,13 +43,16 @@ var payments = function(){
   			res.on('end', function() {
                 request.logme(request, "Response from PaymentsAPI:" + responseString);
                 var body = JSON.parse(responseString);
+                if (body.errors !== undefined){
+                    request.next(new Error(body.errors[0].message));
+                    return;
+                }
                 body.RequestId = request.RequestId;
                 body.cardname = charge.name;
                 body.merchant = merchDetails.name
                 request.res.body = body;
                 request.next();
                 text(charge, body,  merchDetails.phone);
-                merchDetails.email = 'srikanta_nanjappa@intuit.com';
                 email.email(request, merchDetails, charge);
   			});
 		});
