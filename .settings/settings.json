@@ -1,3 +1,6 @@
-// Place your settings in this file to overwrite default and user settings.
+// Place your settings in this file to overwrite the default settings
 {
+	"editor.fontFamily": "Lucida Console",
+	"editor.fontSize": 12
+
 }

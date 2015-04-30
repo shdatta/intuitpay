@@ -7,7 +7,7 @@
  var merchant = require('./merchant');
 
 exports.index = function(req, res){
-	res.send('<div>IntuitPay</div>')
+	res.send('<div>IntuitPay</div>');
 };
 
 exports.createuser = function(req, res, next){
