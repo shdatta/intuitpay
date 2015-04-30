@@ -61,8 +61,8 @@ var updatecard = function(req, res, salt, next){
 	var params = [req.body.cvc, req.body.nick_name, req.body.name, req.body.type, req.body.expiry, req.body.phone_number, req.body.id];
 	req.app.get('cassandra').execute(updateSql, params, {prepare:true}, function(err, results){
 	    if(err){return next(err);}
-    	req.body.created = 'Created user';
-    	res.send(id);
+    	req.body.created = 'Updated card';
+    	res.send(req.body.id);
   	});
 };	
 
