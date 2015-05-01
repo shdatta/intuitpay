@@ -35,7 +35,6 @@ var email = function() {
         request.logme(request, "Request to EmailApi:" + userString);
 
         var req = http.request(options, function(res) {
-            var responseString = '';
             res.on('data', function(chunk) {
                 console.log('Body: ' + chunk);
             });
