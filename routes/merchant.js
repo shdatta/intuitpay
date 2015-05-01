@@ -41,16 +41,18 @@ var merchant = function(){
 		
 		var req = http.request(options, function(res) {
   			res.setEncoding(config.utf8);
-  			var responseString = '';
 			res.on('data', function(data) {
 				merchantMasterAccount += data;
   			});
 
   			res.on('end', function() {
-                console.log('Merchant Master: ' + merchantMasterAccount);
                 
                 parseString(merchantMasterAccount, function (err, result) {
-        		    
+					if (err){
+						request.logme(request, "Error from iHub:" + err);
+						request.next(err);
+						return;
+					}
                 	var merchantInfo = result.RestResponse.MerchantMasterAccounts[0].MerchantMasterAccount[0].Merchant[0];//.merchant;
                 	var masterInfo = result.RestResponse.MerchantMasterAccounts[0].MerchantMasterAccount[0].MasterAccount[0];
                     request.logme(request, "Response iHub:" + merchantInfo.DBA[0] + "--" + merchantInfo.Phone[0].FreeFormNumber[0]);
