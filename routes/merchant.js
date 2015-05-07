@@ -53,6 +53,7 @@ var merchant = function(){
 						request.next(err);
 						return;
 					}
+//					request.logme(request, "Response iHub:" + result.RestResponse.MerchantMasterAccounts[0]);
                 	var merchantInfo = result.RestResponse.MerchantMasterAccounts[0].MerchantMasterAccount[0].Merchant[0];//.merchant;
                 	var masterInfo = result.RestResponse.MerchantMasterAccounts[0].MerchantMasterAccount[0].MasterAccount[0];
                     request.logme(request, "Response iHub:" + merchantInfo.DBA[0] + "--" + merchantInfo.Phone[0].FreeFormNumber[0]);
@@ -71,7 +72,7 @@ var merchant = function(){
 		});
 
 		req.on('error', function(e) {
-			request.logger.debug(e);
+			request.logme(request, e.Description);
 			request.next(e);
 		});
 
