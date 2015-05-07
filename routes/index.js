@@ -1,4 +1,4 @@
-//index.js
+//index.js..
  var util = require('util');
  var cryptography = require('./cryptography');
  var merchant = require('./merchant');
